@@ -23,7 +23,6 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 	
 	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(customers)
-	// xml.NewEncoder(w).Encode(customers)
 }
 
 func GetCustomer(w http.ResponseWriter, r *http.Request) {
