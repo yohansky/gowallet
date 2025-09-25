@@ -45,8 +45,9 @@ func Start() {
 	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(customerRepo)}
 
 	// define routes
-
 	router.HandleFunc("/customers", ch.GetAllCustomers).Methods(http.MethodGet)
+	router.HandleFunc("/customer/{customer_id:[0-9]+}", ch.GetCustomer).Methods(http.MethodGet)
+
 
 
 	//  starting server
