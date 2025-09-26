@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
+	"github.com/subosito/gotenv"
 	"go.mod/src/domain"
 	"go.mod/src/handlers"
 	"go.mod/src/service"
@@ -16,7 +18,8 @@ import (
 )
 
 func InitDB() *sqlx.DB {
-	db, err := sqlx.Open("mysql", "root:@tcp(127.0.0.1:3306)/banking")
+	dsn := os.Getenv("DSN")
+	db, err := sqlx.Open("mysql", dsn)
 	if err != nil {
 		panic(`Failed create DB handle`+ err.Error())
 	} 
@@ -28,13 +31,13 @@ func InitDB() *sqlx.DB {
 	
 	db.SetConnMaxLifetime(time.Minute *3)
 	db.SetMaxOpenConns(10)
-db.SetMaxIdleConns(10)
+	db.SetMaxIdleConns(10)
 
 	return db
 }
 
 func Start() {
-	// mux := http.NewServeMux()
+	gotenv.Load()
 	router := mux.NewRouter()
 
 	db := InitDB()
@@ -48,8 +51,8 @@ func Start() {
 	router.HandleFunc("/customers", ch.GetAllCustomers).Methods(http.MethodGet)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}", ch.GetCustomer).Methods(http.MethodGet)
 
-
-
 	//  starting server
+	// address := os.Getenv("SERVER_ADDRESS")
+	// porrt := os.Getenv("SERVER_PORT")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
