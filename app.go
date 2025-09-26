@@ -1,13 +1,13 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 	"go.mod/src/domain"
 	"go.mod/src/handlers"
 	"go.mod/src/service"
@@ -15,8 +15,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func InitDB() *sql.DB {
-	db, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/banking")
+func InitDB() *sqlx.DB {
+	db, err := sqlx.Open("mysql", "root:@tcp(127.0.0.1:3306)/banking")
 	if err != nil {
 		panic(`Failed create DB handle`+ err.Error())
 	} 
