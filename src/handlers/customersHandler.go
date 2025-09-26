@@ -14,11 +14,6 @@ type CustomerHandlers struct {
 }
 
 func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Request) {
-	// customers := []models.Customer{
-	// 	{Name: "Yohanes", City: "Jakarta", Zipcode: "110075"},
-	// 	{Name: "Huber", City: "Jakarta", Zipcode: "110075"},
-	// }
-
 	customers, _ := ch.Service.GetAllCustomer()
 	
 	w.Header().Add("Content-Type", "application/json")
@@ -27,22 +22,18 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 
 func (ch *CustomerHandlers ) GetCustomer(w http.ResponseWriter, r *http.Request)  {
 	vars := mux.Vars(r)
+	// mengambil customer_id dai url
 	id := vars["customer_id"]
 	
 	customer, err := ch.Service.GetCustomer(id)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprint(w, err.Error())
+		w.WriteHeader(err.Code)
+		fmt.Fprint(w, err.Message)
 		} else {
 		w.Header().Add("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(customer)
 	}
 }
-
-// func GetCustomer(w http.ResponseWriter, r *http.Request) {
-// 	vars := mux.Vars(r)
-// 	fmt.Fprint(w, vars["customer_id"])
-// }
 
 func CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Post request received")
