@@ -6,6 +6,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"go.mod/src/errs"
+	"go.mod/src/logger"
 )
 
 type CustomerRepositoryDb struct {
@@ -26,7 +27,7 @@ func (d CustomerRepositoryDb ) FindAll(status string) ([]Customer, *errs.AppErro
 	}
 
 	if err != nil {
-		log.Println("Error while querying customer table " + err.Error())
+		logger.Error("Error while querying customer table " + err.Error())
 		return nil, errs.NewUnexpectedError("Unexpected database errorr")
 	}
 	// defer rows.Close()
@@ -37,7 +38,7 @@ func (d CustomerRepositoryDb ) FindAll(status string) ([]Customer, *errs.AppErro
 		var c Customer
 		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateofBirth, &c.Status)
 		if err != nil {
-		log.Println("Error while querying customer table " + err.Error())
+		logger.Error("Error while querying customer table " + err.Error())
 		return nil, errs.NewUnexpectedError("Unexpected database errorr")
 	}
 		customers = append(customers, c)
